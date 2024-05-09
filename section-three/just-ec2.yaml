@@ -43,12 +43,22 @@ Resources:
       Roles:
         - Ref: MyRole
 
+  MyLaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: MyLaunchTemplate
+      LaunchTemplateData:
+        IamInstanceProfile:
+          Arn: !GetAtt MyInstanceProfile.Arn
+        ImageId: !Ref ImageId
+        InstanceType: !Ref InstanceType
+        MetadataOptions:
+          HttpTokens: required
+
   MyInstance:
     Type: AWS::EC2::Instance
     Properties:
       AvailabilityZone: !Ref AvailabilityZone
-      IamInstanceProfile: !Ref MyInstanceProfile
-      ImageId: !Ref ImageId
-      InstanceType: !Ref InstanceType
-      MetadataOptions:
-        HttpTokens: required
+      LaunchTemplate:
+        LaunchTemplateId: !Ref MyLaunchTemplate
+        Version: !GetAtt MyLaunchTemplate.LatestVersionNumber

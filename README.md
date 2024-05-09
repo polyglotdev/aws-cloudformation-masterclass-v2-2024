@@ -75,3 +75,9 @@ Above is a simple example of a CloudFormation template that creates an EC2 insta
 - **Don't reinvent the wheel**
   - Leverage existing templates on the web!
   - Leverage the documentation.
+
+## What this course won't do?
+
+- This course won't go over every AWS service because AWS offers around 42.240 products and services.
+- Instead we'll go over understanding how to write CF templates in the perfect way
+- Then you can apply the same concepts to any AWS service you want

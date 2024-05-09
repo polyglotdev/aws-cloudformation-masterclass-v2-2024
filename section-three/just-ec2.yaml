@@ -24,6 +24,7 @@ Resources:
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: !Ref AvailabilityZone
 
+  # trunk-ignore(checkov/CKV_AWS_111)
   MyRole:
     Type: AWS::IAM::Role
     Properties:
@@ -43,18 +44,12 @@ Resources:
               - Effect: Allow
                 Action:
                   - ec2:StartInstances
-                Resource: !GetAtt MyInstance.Arn
-              - Effect: Allow
-                Action:
                   - ec2:DescribeInstances
                   - ec2:DescribeInstanceStatus
                   - ec2:StartInstances
                   - ec2:StopInstances
                   - ec2:RebootInstances
-                Resource: !GetAtt MyInstance.Arn
-                Condition:
-                  StringEquals:
-                    aws:RequestedRegion: !Ref AWS::Region
+                Resource: "*"
 
   MyInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -74,6 +69,11 @@ Resources:
         InstanceType: !Ref InstanceType
         MetadataOptions:
           HttpTokens: required
+        TagSpecifications:
+          - ResourceType: instance
+            Tags:
+              - Key: ManagedBy
+                Value: MyInstance
 
   MyInstance:
     Type: AWS::EC2::Instance

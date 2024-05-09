@@ -1,7 +1,63 @@
 Resources:
-  MyInstance:
-    Type: AWS::EC2::Instance
+  MyRole:
+    Type: AWS::IAM::Role
     Properties:
-      AvailabilityZone: us-east-1a
-      ImageId: ami-0c55b159cbfafe1f0
-      InstanceType: t2.micro
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: EC2Management
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ec2:*
+                Resource: "*"
+
+  MyInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - Ref: MyRole
+
+  MyInstance:
+  Type: AWS::EC2::Instance
+  Properties:
+    IamInstanceProfile: !Ref MyInstanceProfile
+    ImageId: ami-0abcdef1234567890
+    InstanceType: t2.micro
+    MetadataOptions:
+      HttpTokens: required
+
+MyInstanceProfile:
+  Type: AWS::IAM::InstanceProfile
+  Properties:
+    Roles:
+      - !Ref MyRole
+
+MyRole:
+  Type: AWS::IAM::Role
+  Properties:
+    AssumeRolePolicyDocument:
+      Version: "2012-10-17"
+      Statement:
+        - Effect: Allow
+          Principal:
+            Service: ec2.amazonaws.com
+          Action: sts:AssumeRole
+    Policies:
+      - PolicyName: MyPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - ec2:DescribeInstances
+              Resource: "*"

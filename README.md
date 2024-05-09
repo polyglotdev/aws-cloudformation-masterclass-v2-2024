@@ -20,3 +20,6 @@
   - AWS EC2, Security Groups, Autoscaling Groups, etc
   - AWS Lambda
   - A few other services
+- Basic knowledge of `YAML` or `JSON` is preferred
+- Recent macOS/Linux/Windows machine
+- Motivation to learn 🧠

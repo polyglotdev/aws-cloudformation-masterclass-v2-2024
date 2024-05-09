@@ -94,3 +94,6 @@ The calls that CloudFormation makes are all declared by your template. For examp
 
 1. Key Value Pairs are always capitalized in CloudFormation
 2. Any course, and I mean any course that has anything to do with GCP, Azure, or AWS, if the course didn't come out the moment that every single feature you are using in the course did, it's likely that you will have to depend on the documentation, like every good engineer should. Content creators have impossible task of keeping up with the pace of cloud providers. So, if you are following along with this course, and you see that something has changed, please refer to the official documentation. I will do my best to keep the notes up to date, but I can't guarantee that I will be able to do so. DOCS DOCS DOCS!
+3. Keep in mind if you are in the CloudFormation UI the events tab shows things in chronological order. So if you are sitting there depending on that to get you by, you will end up mad
+
+![cf events](./images/cf-ui.png)

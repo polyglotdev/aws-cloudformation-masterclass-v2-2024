@@ -49,14 +49,14 @@ Resources:
                   - ec2:StartInstances
                   - ec2:StopInstances
                   - ec2:RebootInstances
-                Resource: "*"
+                Resource: '*'
 
   MyInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: /
       Roles:
-        - Ref: MyRole
+        - !Ref MyRole
 
   MyLaunchTemplate:
     Type: AWS::EC2::LaunchTemplate

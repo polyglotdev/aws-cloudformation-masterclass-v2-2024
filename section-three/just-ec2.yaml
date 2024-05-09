@@ -7,8 +7,23 @@ Parameters:
     Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
   InstanceType:
     Type: String
+    Default: t2.micro
 
 Resources:
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+
+  MySubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Ref AvailabilityZone
+
   MyRole:
     Type: AWS::IAM::Role
     Properties:
@@ -27,12 +42,16 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - ec2:StartInstances
+                Resource: !GetAtt MyInstance.Arn
+              - Effect: Allow
+                Action:
                   - ec2:DescribeInstances
                   - ec2:DescribeInstanceStatus
                   - ec2:StartInstances
                   - ec2:StopInstances
                   - ec2:RebootInstances
-                Resource: "*"
+                Resource: !GetAtt MyInstance.Arn
                 Condition:
                   StringEquals:
                     aws:RequestedRegion: !Ref AWS::Region
@@ -59,7 +78,11 @@ Resources:
   MyInstance:
     Type: AWS::EC2::Instance
     Properties:
-      AvailabilityZone: !Ref AvailabilityZone
+      SubnetId: !Ref MySubnet
       LaunchTemplate:
         LaunchTemplateId: !Ref MyLaunchTemplate
         Version: !GetAtt MyLaunchTemplate.LatestVersionNumber
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            Encrypted: true

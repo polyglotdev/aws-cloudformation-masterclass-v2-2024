@@ -1,9 +1,18 @@
+Parameters:
+  AvailabilityZone:
+    Type: String
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  InstanceType:
+    Type: String
+
 Resources:
   MyRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
@@ -13,12 +22,19 @@ Resources:
       Policies:
         - PolicyName: EC2Management
           PolicyDocument:
-            Version: "2012-10-17"
+            Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
-                  - ec2:*
+                  - ec2:DescribeInstances
+                  - ec2:DescribeInstanceStatus
+                  - ec2:StartInstances
+                  - ec2:StopInstances
+                  - ec2:RebootInstances
                 Resource: "*"
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion: !Ref AWS::Region
 
   MyInstanceProfile:
     Type: AWS::IAM::InstanceProfile
@@ -28,36 +44,11 @@ Resources:
         - Ref: MyRole
 
   MyInstance:
-  Type: AWS::EC2::Instance
-  Properties:
-    IamInstanceProfile: !Ref MyInstanceProfile
-    ImageId: ami-0abcdef1234567890
-    InstanceType: t2.micro
-    MetadataOptions:
-      HttpTokens: required
-
-MyInstanceProfile:
-  Type: AWS::IAM::InstanceProfile
-  Properties:
-    Roles:
-      - !Ref MyRole
-
-MyRole:
-  Type: AWS::IAM::Role
-  Properties:
-    AssumeRolePolicyDocument:
-      Version: "2012-10-17"
-      Statement:
-        - Effect: Allow
-          Principal:
-            Service: ec2.amazonaws.com
-          Action: sts:AssumeRole
-    Policies:
-      - PolicyName: MyPolicy
-        PolicyDocument:
-          Version: "2012-10-17"
-          Statement:
-            - Effect: Allow
-              Action:
-                - ec2:DescribeInstances
-              Resource: "*"
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: !Ref AvailabilityZone
+      IamInstanceProfile: !Ref MyInstanceProfile
+      ImageId: !Ref ImageId
+      InstanceType: !Ref InstanceType
+      MetadataOptions:
+        HttpTokens: required

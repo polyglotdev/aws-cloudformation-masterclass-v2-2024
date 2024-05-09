@@ -81,3 +81,11 @@ Above is a simple example of a CloudFormation template that creates an EC2 insta
 - This course won't go over every AWS service because AWS offers around 42.240 products and services.
 - Instead we'll go over understanding how to write CF templates in the perfect way
 - Then you can apply the same concepts to any AWS service you want
+
+## How does CloudFormation work?
+
+When creating a stack, AWS CloudFormation makes underlying service calls to AWS to provision and configure your resources. CloudFormation can only perform actions that you have permission to do. For example, to create EC2 instances by using CloudFormation, you need permissions to create instances. You'll need similar permissions to terminate instances when you delete stacks with instances. You use AWS Identity and Access Management (IAM) to manage permissions.
+
+The calls that CloudFormation makes are all declared by your template. For example, suppose you have a template that describes an EC2 instance with a t2.micro instance type. When you use that template to create a stack, CloudFormation calls the Amazon EC2 create instance API and specifies the instance type as t2.micro. The following diagram summarizes the CloudFormation workflow for creating stacks.
+
+![cf workflow](image.png)

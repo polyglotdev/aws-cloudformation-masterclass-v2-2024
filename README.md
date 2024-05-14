@@ -145,3 +145,20 @@ So yaml has:
 - Key Value Pairs
 - Nested Objects
 - Support Arrays
+
+> 🧠 If you create a S3 bucket without the attribute bucket_name set you will get a random.
+
+## CloudFormation Update Behavior
+
+- CloudFormation updates resources based on differences between what you submit and stack's current template
+- Which method depends on which property you update for a resource.
+- Update with no interruptions:
+  - Some properties can be updated in place without interruption
+  - For example, you can update the tags of an EC2 instance without interruption
+- Update with Some interruptions:
+  - Some properties can be updated in place with some interruption
+  - For example, you can update the instance type of an EC2 instance with some interruption but if you update the EC2 instance type, you will have to stop and start the instance
+- Replacement
+  - Recreating resource with a new ID
+  - Create the new resource, change references from other resources to the new resource, then deleted the old resource.
+  - Example: updating an RDS DB instance AZ will require replacement

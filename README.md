@@ -97,3 +97,51 @@ The calls that CloudFormation makes are all declared by your template. For examp
 3. Keep in mind if you are in the CloudFormation UI the events tab shows things in chronological order. So if you are sitting there depending on that to get you by, you will end up mad.
 
 ![cf events](./images/cf-ui.png)
+
+## What is  `yaml`
+
+YAML is a human-readable data serialization standard that can be used in conjunction with all programming languages and is often used to write configuration files.
+
+Here is an example of a `YAML` file:
+
+```yaml
+Resources:
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: us-east-1a
+      ImageId: ami-0ff8a91507f77f867
+      InstanceType: t2.micro
+```
+
+In the above example, we are creating an EC2 instance using `YAML`.
+
+## What is `JSON`
+
+JSON (JavaScript Object Notation) is a lightweight data-interchange format. It is easy for humans to read and write. It is easy for machines to parse and generate.
+
+Here is an example of a `JSON` file:
+
+```json
+{
+  "Resources": {
+    "MyEC2Instance": {
+      "Type": "AWS::EC2::Instance",
+      "Properties": {
+        "AvailabilityZone": "us-east-1a",
+        "ImageId": "ami-0ff8a91507f77f867",
+        "InstanceType": "t2.micro"
+      }
+    }
+
+  }
+}
+```
+
+In the above example, we are creating an EC2 instance using `JSON`.
+
+So yaml has:
+
+- Key Value Pairs
+- Nested Objects
+- Support Arrays

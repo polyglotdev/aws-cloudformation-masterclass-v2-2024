@@ -1,0 +1,13 @@
+Resources:
+  DomS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      OwnershipControls:
+        Rules:
+          - ObjectOwnership: ObjectWriter
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      BucketName: dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f

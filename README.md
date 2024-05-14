@@ -162,3 +162,5 @@ So yaml has:
   - Recreating resource with a new ID
   - Create the new resource, change references from other resources to the new resource, then deleted the old resource.
   - Example: updating an RDS DB instance AZ will require replacement
+
+> 🧠 To delete an S3 bucket it needs to be **empty**.

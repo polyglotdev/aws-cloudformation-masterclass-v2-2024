@@ -1,0 +1,16 @@
+{
+  "And": [
+    {
+      "Dimensions": {
+        "Key": "SERVICE",
+        "Values": ["Amazon Elastic Compute Cloud - Compute"]
+      }
+    },
+    {
+      "Tags": {
+        "Key": "aws:cloudformation:stack-name",
+        "Values": ["MyCloudFormationStackName"]
+      }
+    }
+  ]
+}

@@ -164,3 +164,33 @@ So yaml has:
   - Example: updating an RDS DB instance AZ will require replacement
 
 > 🧠 To delete an S3 bucket it needs to be **empty**.
+
+## Understanding the CF Options
+
+- Tags: Key Value pairs to help you identify your stacks
+- Permissions: IAM permissions to create, update, delete stacks
+- Notification Options: SNS topics to get notification on stack events
+- Rollback on failure: Yes or No
+- Rollback Configuration: (monitoring time and CloudWatch alarm)
+- Stack Policy: JSON to control updates to specific resources
+- Termination Protection: Protect against accidental deletion
+- Quick-start Link: Pre-populate the stack with a template
+
+## CloudFormation Building Blocks
+
+- Template's components
+- AWSTemplateFormatVersion: identifies the capabilities of the template
+- Description: describes the template
+- Transform: specifies one or more macros that AWS CloudFormation uses to process your template
+- Metadata: objects that provide additional information about the template
+- Resources: specifies the stack resources and their properties. MANDATORY
+- Parameters: values to pass to your template at runtime
+- Mappings: static variables for your template
+- Conditions: List of conditions to perform resource creation
+- Rules: validate a parameter or a combination of parameters during stack creation/update
+- Template's helpers
+  - References: `Ref` and `Fn::GetAtt`
+  - Functions: `Fn::`
+  - Pseudo Parameters: `AWS::AccountId`, `AWS::Region`, etc
+  - Intrinsic Functions: `Fn::Base64`, `Fn::FindInMap`, `Fn::GetAZs`, `Fn::Join`, `Fn::Select`, `Fn::Split`, `Fn::Sub`, `Fn::Transform`, `Fn::And`, `Fn::Equals`, `Fn::If`, `Fn::Not`, `Fn::Or`
+  - Conditions Functions: `Fn::And`, `Fn::Equals`, `Fn::If`, `Fn::Not`, `Fn::Or`

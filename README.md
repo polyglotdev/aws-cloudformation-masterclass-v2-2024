@@ -241,3 +241,5 @@ Resources:
 ### **Advanced Features**
    - **Pseudo Parameters**: AWS provides certain pseudo parameters that you can use in your templates. These are parameters that AWS sets automatically, like `AWS::AccountId`, `AWS::Region`, and `AWS::StackId`.
    - **NoEcho**: For sensitive information, such as passwords, you can set the `NoEcho` property to `true` to prevent the value from being returned by describe or list actions.
+
+[AWS Parameter Docs](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html)

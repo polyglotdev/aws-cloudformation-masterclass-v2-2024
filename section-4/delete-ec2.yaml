@@ -1,0 +1,61 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to delete an EC2 instance on stack deletion.
+
+Resources:
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: 'sts:AssumeRole'
+      Policies:
+        - PolicyName: EC2DeletionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'ec2:TerminateInstances'
+                  - 'ec2:DescribeInstances'
+                Resource: '*'
+
+  InstanceDeletionLambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Runtime: python3.8
+      Code:
+        ZipFile: |
+          import boto3
+          import cfnresponse
+          import os
+
+          def handler(event, context):
+              ec2 = boto3.client('ec2')
+              instance_id = os.environ['INSTANCE_ID']  # Instance ID to delete
+
+              if event['RequestType'] == 'Delete':
+                  try:
+                      ec2.terminate_instances(InstanceIds=[instance_id])
+                      cfnresponse.send(event, context, cfnresponse.SUCCESS, {"Status": "SUCCESS"})
+                  except Exception as e:
+                      print(e)
+                      cfnresponse.send(event, context, cfnresponse.FAILED, {"Status": "FAILED"})
+              else:
+                  cfnresponse.send(event, context, cfnresponse.SUCCESS, {"Status": "SUCCESS"})
+
+  CustomResourceForDeletion:
+    Type: Custom::DeleteEC2Instance
+    Properties:
+      ServiceToken: !GetAtt InstanceDeletionLambdaFunction.Arn
+      InstanceId: 'i-1234567890abcdef0'  # Replace this with your instance ID
+
+Outputs:
+  LambdaFunctionName:
+    Description: The name of the Lambda function
+    Value: !Ref InstanceDeletionLambdaFunction

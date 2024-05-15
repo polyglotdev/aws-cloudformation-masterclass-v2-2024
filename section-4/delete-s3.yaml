@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 Description: Template to empty and delete an S3 bucket
 
 Resources:
@@ -6,27 +6,27 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
-        Version: '2012-10-17'
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
               Service: lambda.amazonaws.com
-            Action: 'sts:AssumeRole'
+            Action: sts:AssumeRole
       Policies:
         - PolicyName: S3BucketDeletionPolicy
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: 2012-10-17
             Statement:
               - Effect: Allow
                 Action:
-                  - 's3:ListBucket'
-                  - 's3:DeleteObject'
+                  - s3:ListBucket
+                  - s3:DeleteObject
                 Resource:
-                  - !Sub 'arn:aws:s3:::dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f'
-                  - !Sub 'arn:aws:s3:::dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f/*'
+                  - !Sub arn:aws:s3:::dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f
+                  - !Sub arn:aws:s3:::dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f/*
               - Effect: Allow
-                Action: 's3:DeleteBucket'
-                Resource: !Sub 'arn:aws:s3:::dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f'
+                Action: s3:DeleteBucket
+                Resource: !Sub arn:aws:s3:::dom-hallan-udemy-cf-course-ac6fe543-42ce-4233-95b6-266fc7103c9f
 
   BucketDeletionLambdaFunction:
     Type: AWS::Lambda::Function
@@ -56,12 +56,12 @@ Resources:
                   s3.delete_bucket(Bucket=bucket)
 
               cfnresponse.send(event, context, cfnresponse.SUCCESS, {})
-      Handler: 'index.lambda_handler'
+      Handler: index.lambda_handler
       Role: !GetAtt S3BucketDeletionLambdaExecutionRole.Arn
       Runtime: python3.8
       Timeout: 120
 
   S3BucketDeletionCustomResource:
-    Type: 'Custom::S3BucketDeletion'
+    Type: Custom::S3BucketDeletion
     Properties:
       ServiceToken: !GetAtt BucketDeletionLambdaFunction.Arn

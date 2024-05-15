@@ -243,3 +243,28 @@ Resources:
    - **NoEcho**: For sensitive information, such as passwords, you can set the `NoEcho` property to `true` to prevent the value from being returned by describe or list actions.
 
 [AWS Parameter Docs](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/parameters-section-structure.html)
+
+## SSM Parameter Type
+
+- Reference parameter in System Parameter Manager
+- Specify SSM parameter key as the value
+- Cloudformation always fetches the latest value(you can't use a specific version)
+- CF does not store Secure String values
+- Validation done on SSM parameter keys but not on the values
+- Supported SSM Parameter Types:
+  - `AWS::SSM::Parameter::Name`
+  - `AWS::SSM::Parameter::Value<String>`
+  - `AWS::SSM::Parameter::Value<List<String>>`
+  - `AWS::SSM::Parameter::Value<CommaDelimitedList>`
+  - `AWS::SSM::Parameter::Value<AWS-Specific Parameter>`
+  - `AWS::SSM::Parameter::Value<List<AWS-Specific Parameter>>`
+
+Example: Fetch Latest AMI ID's
+
+```yaml
+Parameters:
+  LatestAMIId:
+    Type: 'AWS::SSM::Parameter::Value<String>'
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+    Description: Enter the latest AMI ID for the EC2 instance.
+```

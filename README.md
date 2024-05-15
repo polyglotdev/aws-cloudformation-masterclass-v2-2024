@@ -194,3 +194,50 @@ So yaml has:
   - Pseudo Parameters: `AWS::AccountId`, `AWS::Region`, etc
   - Intrinsic Functions: `Fn::Base64`, `Fn::FindInMap`, `Fn::GetAZs`, `Fn::Join`, `Fn::Select`, `Fn::Split`, `Fn::Sub`, `Fn::Transform`, `Fn::And`, `Fn::Equals`, `Fn::If`, `Fn::Not`, `Fn::Or`
   - Conditions Functions: `Fn::And`, `Fn::Equals`, `Fn::If`, `Fn::Not`, `Fn::Or`
+
+## Parameters
+
+Parameters in CloudFormation are a powerful way to customize your AWS infrastructure deployments. Here’s a breakdown of what they are and how they work:
+
+### **Purpose of Parameters**
+   - **Customization**: Parameters allow you to pass values to your CloudFormation template at runtime, without having to hard-code them into the template. This makes your templates more reusable and flexible.
+   - **Input Validation**: You can define the type of the parameter and constraints (like min/max value, allowed patterns, and allowed values) to ensure that the input is valid before the template is executed.
+
+### **Types of Parameters**
+   - **String**: General text, can include numbers.
+   - **Number**: Numeric values, both integers, and floating points.
+   - **List**: Sets of values that are passed as a single parameter. You can specify a list of numbers, strings, or AWS-specific types like a list of EC2 instance IDs.
+   - **CommaDelimitedList**: A list of values that AWS CloudFormation passes to your script as a comma-separated list (e.g., for passing multiple values like in subnets or security groups).
+   - **AWS-specific parameter types**: Such as `AWS::EC2::KeyPair::KeyName`, which requires the name of an existing EC2 KeyPair.
+
+### **Using Parameters**
+To define a parameter in a CloudFormation template, you add an entry in the `Parameters` section of the template. Here's an example of a simple string parameter:
+
+```yaml
+Parameters:
+  InstanceTypeParameter:
+    Type: String
+    Default: t2.micro
+    Description: Enter the instance type for the EC2 instance.
+    AllowedValues:
+      - t2.micro
+      - m1.small
+      - m1.large
+    ConstraintDescription: Must be a valid EC2 instance type.
+```
+
+### **Referencing Parameters**
+You can reference parameters anywhere in your template with the `Ref` function. For example:
+
+```yaml
+Resources:
+  EC2Instance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      InstanceType: !Ref InstanceTypeParameter
+      ImageId: 'ami-0c55b159cbfafe1f0'
+```
+
+### **Advanced Features**
+   - **Pseudo Parameters**: AWS provides certain pseudo parameters that you can use in your templates. These are parameters that AWS sets automatically, like `AWS::AccountId`, `AWS::Region`, and `AWS::StackId`.
+   - **NoEcho**: For sensitive information, such as passwords, you can set the `NoEcho` property to `true` to prevent the value from being returned by describe or list actions.

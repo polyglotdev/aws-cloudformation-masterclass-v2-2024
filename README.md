@@ -361,3 +361,14 @@ In this example:
 - `MyDatabase` is an RDS instance that will have a snapshot taken before it is deleted, thanks to the `Snapshot` policy.
 
 By using the `DeletionPolicy` attribute, you can manage your AWS resources more effectively and ensure that critical data or configurations are not inadvertently lost.
+
+## `UpdateReplacePolicy`
+
+- `UpdateReplacePolicy` attribute is used to specify what happens when a resource is replaced during an update
+- This attribute is useful when you want to control the behavior of a resource when it is updated
+- There are two possible values for the `UpdateReplacePolicy` attribute:
+  - `Delete`: The resource will be deleted and recreated when it is updated
+  - `Retain`: The resource will be retained when it is updated
+- By default, resources are replaced during an update
+- You can use the `UpdateReplacePolicy` attribute to specify that a resource should be retained when it is updated
+- This can be useful for preserving data or configurations that are still needed

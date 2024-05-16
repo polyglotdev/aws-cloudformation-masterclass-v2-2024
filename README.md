@@ -313,3 +313,51 @@ Parameters:
 - `Transform`
   - Macros to process the template
   - Useful for code reuse
+
+## `DeletionPolicy`
+
+In AWS CloudFormation, the `DeletionPolicy` attribute allows you to specify what should happen to a resource when its stack is deleted. This attribute can be particularly useful for managing critical resources that you want to retain or back up even after the stack that created them is deleted.
+
+- Control what happens when CF template is deleted or when resource is removed from the template
+- Use with any resource
+- `DeletionPolicy=Retain`
+  - Specifies that the resource will be retained when the stack is deleted
+  - To Keep a resource, specify a `DeletionPolicy` of `Retain`
+- `DeletionPolicy=Snapshot`
+  - Specifies that the resource will be retained as a snapshot when the stack is deleted
+  - Useful for resources that support snapshots (like RDS, EBS, Redshift)
+- `DeletionPolicy=Delete`
+  - Specifies that the resource will be deleted when the stack is deleted
+  - This is the default behavior
+
+There are three possible values for the `DeletionPolicy` attribute:
+
+1. **Delete**: This is the default behavior if no `DeletionPolicy` is specified. The resource is deleted when the stack is deleted.
+2. **Retain**: This ensures that the resource is not deleted when the stack is deleted. Instead, it remains in your account. This can be useful for preserving data or configurations that are still needed.
+3. **Snapshot**: This applies to resources that support snapshots (such as Amazon RDS, Amazon EBS, and Amazon Redshift). When the stack is deleted, a snapshot of the resource is created and retained. This is useful for retaining the state of the resource at the time of stack deletion.
+
+Here is an example of how to use `DeletionPolicy` in a CloudFormation template:
+
+```yaml
+Resources:
+  MyBucket:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+
+  MyDatabase:
+    Type: AWS::RDS::DBInstance
+    DeletionPolicy: Snapshot
+    Properties:
+      DBInstanceClass: db.t2.micro
+      Engine: MySQL
+      MasterUsername: admin
+      MasterUserPassword: password
+      AllocatedStorage: 20
+```
+
+In this example:
+
+- `MyBucket` is an S3 bucket that will not be deleted when the stack is deleted due to the `Retain` policy.
+- `MyDatabase` is an RDS instance that will have a snapshot taken before it is deleted, thanks to the `Snapshot` policy.
+
+By using the `DeletionPolicy` attribute, you can manage your AWS resources more effectively and ensure that critical data or configurations are not inadvertently lost.

@@ -372,3 +372,11 @@ By using the `DeletionPolicy` attribute, you can manage your AWS resources more 
 - By default, resources are replaced during an update
 - You can use the `UpdateReplacePolicy` attribute to specify that a resource should be retained when it is updated
 - This can be useful for preserving data or configurations that are still needed
+
+## FAQ for resources
+
+- Can I create a dynamic number of resources?
+  - Yes, you can use CF Macros and Transformations
+- Is every AWS Service supported?
+  - Almost. Only a select few niches are not there yet.
+  - You can work around that by using custom resources

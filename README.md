@@ -284,3 +284,32 @@ Parameters:
 - Resources can have creation policies (wait for an S3 bucket to be created)
 - Resources can have update policies (how to handle updates)
 - Resources can have deletion policies (what to do when you delete the stack)
+
+## Optional Attributes for Resources
+
+- `DependsOn`
+  - useful to draw dependencies between resources
+  - CloudFormation will make sure that resources are created in the right order
+- `DeletionPolicy`
+  - `Delete` (default): resource will be deleted when the stack is deleted
+  - `Retain`: resource will be retained when the stack is deleted
+  - `Snapshot`: resource will be retained as a snapshot when the stack is deleted
+- `UpdatePolicy`
+  - `AutoScalingReplacingUpdate`: The resource will be replaced by an updated resource
+  - `AutoScalingRollingUpdate`: The resource will be updated in batches
+  - `AutoScalingScheduledAction`: The resource will be updated based on a scheduled action
+- `CreationPolicy`
+  - `ResourceSignal`: Wait for a signal (URL) or a timeout
+  - Useful for EC2 instances to wait for the instance to be ready
+- `Metadata`
+  - Data about the resource
+  - Can be used by CloudFormation to make decisions
+- `Outputs`
+  - Return values of the resources
+  - Can be imported into other stacks
+- `Condition`
+  - Condition to create the resource
+  - Can be used to create resources based on environment (dev, prod)
+- `Transform`
+  - Macros to process the template
+  - Useful for code reuse

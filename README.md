@@ -268,3 +268,19 @@ Parameters:
     Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
     Description: Enter the latest AMI ID for the EC2 instance.
 ```
+
+## Resources
+
+- Resources are the core of your CloudFormation template
+- Each resource will have a type, a name, and properties
+- Resources are declared and can reference each other
+- Resources can be of different types (AWS::EC2::Instance, AWS::S3::Bucket, etc)
+- Resources can have metadata, attributes, and update policies
+- Resources can have deletion policies (what happens when you delete the stack)
+- Resources can have dependencies on each other
+- Resources can have outputs (return values)
+- Resources can have conditions (if statements)
+- Resources can have transformations (macros)
+- Resources can have creation policies (wait for an S3 bucket to be created)
+- Resources can have update policies (how to handle updates)
+- Resources can have deletion policies (what to do when you delete the stack)

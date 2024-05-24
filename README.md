@@ -452,7 +452,7 @@ To get a single ARN from the list, use [Fn::Select](https://docs.aws.amazon.com/
 }
 ```
 
-### AWS::NotificationARNs YAML
+### YAML for `AWS::NotificationARNs`
 
 ```yaml
 myASGrpOne:

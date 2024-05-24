@@ -1,10 +1,66 @@
 Resources:
-  # here we define a SSH security group that will be used in the entire company
+  # Define the VPC
+  MyVPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  # Define an Internet Gateway
+  MyInternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  # Attach the Internet Gateway to the VPC
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyInternetGateway
+
+  # Define a Public Subnet
+  MyPublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref MyVPC
+      CidrBlock: 10.0.0.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone:
+        Fn::Select:
+          - 0
+          - Fn::GetAZs: ""
+
+  # Define a Route Table
+  MyRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref MyVPC
+
+  # Define a Route
+  MyRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachGateway
+    Properties:
+      RouteTableId: !Ref MyRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref MyInternetGateway
+
+  # Associate the Route Table with the Public Subnet
+  MyRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref MyPublicSubnet
+      RouteTableId: !Ref MyRouteTable
+
+  # Define the Security Group within the VPC
   MyCompanyWideSSHSecurityGroup:
-    # http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-properties-ec2-security-group.html
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Enable SSH access via port 22
+      VpcId: !Ref MyVPC
       SecurityGroupIngress:
         # we have a lot of rules because it's a perfect security group
         # finance team network
@@ -27,8 +83,20 @@ Resources:
           Description: Application team support network
 
 Outputs:
-  StackSSHSecurityGroup:
-    Description: The SSH Security Group for our Company
+  VPCId:
+    Description: The ID of the VPC
+    Value: !Ref MyVPC
+    Export:
+      Name: MyVPCId
+
+  PublicSubnetId:
+    Description: The ID of the Public Subnet
+    Value: !Ref MyPublicSubnet
+    Export:
+      Name: MyPublicSubnetId
+
+  SecurityGroupId:
+    Description: The ID of the SSH Security Group
     Value: !Ref MyCompanyWideSSHSecurityGroup
     Export:
-      Name: SSHSecurityGroup
+      Name: MyCompanyWideSSHSecurityGroup

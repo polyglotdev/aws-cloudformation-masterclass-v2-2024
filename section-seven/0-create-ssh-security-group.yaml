@@ -8,20 +8,23 @@ Resources:
       SecurityGroupIngress:
         # we have a lot of rules because it's a perfect security group
         # finance team network
-      - CidrIp: 10.0.48.0/24
-        FromPort: 22
-        IpProtocol: tcp
-        ToPort: 22
-        # marketing team network
-      - CidrIp: 10.0.112.0/24
-        FromPort: 22
-        IpProtocol: tcp
-        ToPort: 22
-        # application team support network
-      - CidrIp: 10.0.176.0/24
-        FromPort: 22
-        IpProtocol: tcp
-        ToPort: 22
+        - CidrIp: 10.0.48.0/24
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+          Description: Finance team network
+          # marketing team network
+        - CidrIp: 10.0.112.0/24
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+          Description: Marketing team network
+          # application team support network
+        - CidrIp: 10.0.176.0/24
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+          Description: Application team support network
 
 Outputs:
   StackSSHSecurityGroup:

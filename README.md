@@ -380,3 +380,18 @@ By using the `DeletionPolicy` attribute, you can manage your AWS resources more 
 - Is every AWS Service supported?
   - Almost. Only a select few niches are not there yet.
   - You can work around that by using custom resources
+
+## Mappings
+
+- Mappings are fixed variables within your CF template
+- They are very handy to differentiate between different environments (dev, test, prod)
+- They can be used to map values based on a key
+- They can be nested
+- They can be referenced using the `Fn::FindInMap` function
+
+## When would you use mappings vs Parameters
+
+- Use mappings when you know in advance all the values that can be taken and that they are static
+- Use parameters when the values are user-specific or environment-specific
+- Use mappings for AMI mappings (region, OS type)
+- Use parameters for instance type, key pair, etc

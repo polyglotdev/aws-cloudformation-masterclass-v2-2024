@@ -547,3 +547,72 @@ Returns the name of the stack as specified with the `aws cloudformation create-s
 ## `AWS::URLSuffix`
 
 Returns the suffix for a domain. The suffix is typically `amazonaws.com`, but might differ by Region. For example, the suffix for the China (Beijing) Region is `amazonaws.com.cn`.
+
+## Outputs
+
+In AWS CloudFormation, **Outputs** are used to return values from your stack. These values can be useful for various purposes, such as:
+
+1. **Displaying Information**: Outputs can display information about the resources created in the stack, such as the URL of a website or the ID of an instance.
+2. **Cross-Stack References**: Outputs can be used to export values that can be imported into other stacks, facilitating cross-stack references.
+3. **Stack Outputs in AWS Management Console**: Outputs are displayed in the AWS Management Console, making it easier to view important information about your stack.
+
+### Defining Outputs
+
+Outputs are defined in the `Outputs` section of an AWS CloudFormation template. Each output can include the following properties:
+
+- **Description**: A string that describes the output value.
+- **Value**: The value of the output. This can be a literal string, a reference to a resource, or an intrinsic function.
+- **Export**: Specifies the name of the value to export. This is used for cross-stack references.
+
+### Example
+
+Here is an example of how to define outputs in a CloudFormation template:
+
+```yaml
+Outputs:
+  InstanceId:
+    Description: The instance ID of the web server
+    Value: !Ref WebServerHost
+
+  WebsiteURL:
+    Description: URL for newly created LAMP stack
+    Value: !Sub 'http://${WebServerHost.PublicDnsName}'
+
+  PublicIP:
+    Description: Public IP address of the web server
+    Value: !GetAtt WebServerHost.PublicIp
+```
+
+In this example:
+- `InstanceId` returns the ID of the web server instance.
+- `WebsiteURL` returns the URL of the newly created LAMP stack.
+- `PublicIP` returns the public IP address of the web server.
+
+### Using Outputs for Cross-Stack References
+
+To export an output value for use in other stacks, you can use the `Export` property:
+
+```yaml
+Outputs:
+  VPCId:
+    Description: The ID of the VPC
+    Value: !Ref MyVPC
+    Export:
+      Name: MyVPCId
+```
+
+In another stack, you can import this value using the `Fn::ImportValue` intrinsic function:
+
+```yaml
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      VpcId: !ImportValue MyVPCId
+```
+
+### Best Practices
+
+- **Meaningful Names**: Use meaningful names for your outputs to make it clear what value is being returned.
+- **Descriptions**: Always provide descriptions for your outputs to make it easier to understand their purpose.
+- **Cross-Stack References**: Use outputs and exports to share values between stacks, promoting modular and reusable CloudFormation templates.

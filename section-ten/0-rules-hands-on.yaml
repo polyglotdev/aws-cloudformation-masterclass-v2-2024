@@ -1,0 +1,162 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Rules example with an EC2 instance.
+Parameters:
+  InstanceType:
+    Type: String
+    Default: t2.small
+    AllowedValues:
+      - t2.nano
+      - t2.micro
+      - t2.small
+
+  Environment:
+    Type: String
+    Default: dev
+    AllowedValues:
+      - dev
+      - prod
+
+  ImageId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Rules:
+  ProdInstanceType:
+    RuleCondition: !Equals
+      - !Ref Environment
+      - prod
+    Assertions:
+      - Assert: !Equals [t2.small, !Ref InstanceType]
+        AssertDescription: For a production environment, the instance type must be t2.small
+
+  DevInstanceType:
+    RuleCondition: !Equals
+      - !Ref Environment
+      - dev
+    Assertions:
+      # Assert with Or
+      # - Assert:
+      #     'Fn::Or':
+      #       - !Equals [!Ref InstanceType, t2.nano]
+      #       - !Equals [!Ref InstanceType, t2.micro]
+      # Assert with Contains
+      - Assert:
+          "Fn::Contains":
+            - - t2.nano
+              - t2.micro
+            - !Ref InstanceType
+        AssertDescription: For a development environment, the instance type must be t2.nano or t2.micro
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone: !Select [0, !GetAZs ]
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet
+      RouteTableId: !Ref RouteTable
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - Description: SSH access from trusted IP
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 75.220.213.2/32
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: !Ref ImageId
+        InstanceType: t2.micro
+        NetworkInterfaces:
+          - AssociatePublicIpAddress: false
+            DeviceIndex: 0
+            SubnetId: !Ref Subnet
+            Groups:
+              - !Ref SecurityGroup
+        MetadataOptions:
+          HttpTokens: required
+
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            Encrypted: true
+            DeleteOnTermination: true
+            VolumeType: gp2
+            KmsKeyId: arn:aws:kms:us-east-1:654654523805:key/26cf106f-25e3-44a6-b06a-bcd1fad82451
+
+  MountPoint:
+    Type: AWS::EC2::VolumeAttachment
+    Properties:
+      InstanceId: !Ref EC2Instance
+      VolumeId: !Ref NewVolume
+      Device: /dev/sdh
+
+  NewVolume:
+    Type: AWS::EC2::Volume
+    Properties:
+      Size: 1
+      AvailabilityZone: !GetAtt EC2Instance.AvailabilityZone
+      Encrypted: true
+      KmsKeyId: arn:aws:kms:us-east-1:654654523805:key/26cf106f-25e3-44a6-b06a-bcd1fad82451
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
+
+Outputs:
+  VPCId:
+    Value: !Ref VPC
+    Export:
+      Name: VPCId
+  SubnetId:
+    Value: !Ref Subnet
+    Export:
+      Name: SubnetId

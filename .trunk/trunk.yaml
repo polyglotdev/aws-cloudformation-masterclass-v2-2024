@@ -19,6 +19,7 @@ lint:
   disabled:
     - markdownlint
   enabled:
+    - cfnlint@0.87.3
     - checkov@3.2.87
     - git-diff-check
     - prettier@3.2.5

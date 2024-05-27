@@ -620,3 +620,7 @@ Resources:
 ## Conditions
 
 In AWS CloudFormation, **Conditions** are used to control the creation of resources based on certain conditions. Conditions can be used to define when a resource should be created, updated, or deleted. This can be useful for implementing logic in your CloudFormation templates.
+
+## `Fn::GetAtt`
+
+The `Fn::GetAtt` function returns the value of an attribute from a resource in the template. For example, you can use `Fn::GetAtt` to get the public IP address of an EC2 instance or the DNS name of an S3 bucket.

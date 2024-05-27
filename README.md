@@ -664,3 +664,5 @@ Some AWS CloudFormation features retrieve settings or configuration information 
   - Defines the grouping and ordering of input parameters when they are displayed in the AWS CloudFormation console. By default, the AWS CloudFormation console alphabetically sorts parameters by their logical ID. For more information, see AWS::CloudFormation::Interface.
 - `AWS::CloudFormation::Designer`
   - Describes how your resources are laid out in AWS CloudFormation Designer (Designer). Designer automatically adds this information when you use it to create and update templates. For more information, see [What is AWS CloudFormation Designer?](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/working-with-templates-cfn-designer.html).
+
+> The Metadata Key that is automatically added by the AWS CloudFormation Designer is `AWS::CloudFormation::Designer`.

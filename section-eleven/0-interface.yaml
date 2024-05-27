@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Interface example with an EC2 instance and network resources.
+
+Parameters:
+  InstanceType:
+    Description: EC2 instance type.
+    Type: String
+    Default: t2.micro
+    AllowedValues:
+      - t2.micro
+      - t2.small
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: MyVPC
+
+  Subnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: false
+      AvailabilityZone: !Select [0, !GetAZs ]
+
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+
+  AttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC
+
+  Route:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  SubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref Subnet
+      RouteTableId: !Ref RouteTable
+
+  SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - Description: SSH access from trusted IP
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 75.220.213.2/32
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateData:
+        ImageId: ami-05ade5d40b1a76a54
+        InstanceType: !Ref InstanceType
+        NetworkInterfaces:
+          - AssociatePublicIpAddress: false
+            DeviceIndex: 0
+            SubnetId: !Ref Subnet
+            Groups:
+              - !Ref SecurityGroup
+        MetadataOptions:
+          HttpTokens: required
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      BlockDeviceMappings:
+        - DeviceName: /dev/xvda
+          Ebs:
+            Encrypted: true
+            DeleteOnTermination: true
+            VolumeType: gp2
+            KmsKeyId: arn:aws:kms:us-east-1:654654523805:key/26cf106f-25e3-44a6-b06a-bcd1fad82451
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Amazon EC2 Configuration
+        Parameters:
+          - InstanceType
+    ParameterLabels:
+      InstanceType:
+        default: Select the instance type
+
+Outputs:
+  VPCId:
+    Value: !Ref VPC
+    Export:
+      Name: VPCId
+
+  SubnetId:
+    Value: !Ref Subnet
+    Export:
+      Name: SubnetId
+
+  SecurityGroupId:
+    Value: !Ref SecurityGroup
+    Export:
+      Name: SecurityGroupId
+
+  InstanceId:
+    Value: !Ref MyEC2Instance
+    Export:
+      Name: InstanceId

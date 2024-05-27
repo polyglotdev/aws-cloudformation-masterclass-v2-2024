@@ -1,4 +1,4 @@
-# Pull Request Template for AWS CloudFormation Course
+# Ticket Name
 
 ## Description
 
@@ -10,7 +10,6 @@ Please include a summary of the change and which issue is fixed. Please also inc
 
 ## Type of change
 
-Please delete options that are not relevant.
 
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
@@ -26,12 +25,9 @@ Please delete options that are not relevant.
 
 ## Deployment Notes
 
-Please include any important deployment notes here. Include details on the expected impact, deployment procedure, or required actions after deployment.
 
 ## How does this PR make you feel?
 
-Enter a giphy to express your feelings about this PR.
 
-## Additional Information
 
-Any additional information or context about the pull request that might be helpful for reviewers.
+## Screenshot and/or Additional Information

@@ -616,3 +616,7 @@ Resources:
 - **Meaningful Names**: Use meaningful names for your outputs to make it clear what value is being returned.
 - **Descriptions**: Always provide descriptions for your outputs to make it easier to understand their purpose.
 - **Cross-Stack References**: Use outputs and exports to share values between stacks, promoting modular and reusable CloudFormation templates.
+
+## Conditions
+
+In AWS CloudFormation, **Conditions** are used to control the creation of resources based on certain conditions. Conditions can be used to define when a resource should be created, updated, or deleted. This can be useful for implementing logic in your CloudFormation templates.

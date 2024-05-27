@@ -624,3 +624,22 @@ In AWS CloudFormation, **Conditions** determine resource creation, updates, or d
 ## `Fn::GetAtt`
 
 The `Fn::GetAtt` function retrieves resource attributes, e.g., EC2 IP address or S3 DNS name.
+
+## CF Rules
+
+- **Rule**: Validate a parameter or a combination of parameters during stack creation/update
+- **Purpose**: Ensure that the right parameters are passed to the stack
+- **Example**: Ensure that the instance type is valid, or that the key pair exists
+- **How**: Use the `Rules` section in the CF template
+- **When**: Rules are evaluated during stack creation and stack update
+
+## `Fn::Base64`
+
+- The `Fn::Base64` function returns the Base64 representation of the input string.
+- This function is typically used to encode user data for an EC2 instance.
+- The `Fn::Base64` function is useful when you need to pass sensitive information to an instance without exposing it in plain text.
+
+## `Fn::FindInMap`
+
+- The `Fn::FindInMap` function returns the value corresponding to keys in a two-level map that is declared in the Mappings section.
+- This function is useful when you need to look up values based on two keys.

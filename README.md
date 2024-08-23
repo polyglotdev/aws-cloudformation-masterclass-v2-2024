@@ -2,6 +2,8 @@
 
 [AWS CloudFormation Masterclass v2 2024](https://www.udemy.com/course/aws-cloudformation-master-class)
 
+[![wakatime](https://wakatime.com/badge/user/a4bc525c-e5c4-4032-8646-732b64f81d6d/project/c56afee6-74d8-4dd6-bb78-e4c2aa1ce875.svg)](https://wakatime.com/badge/user/a4bc525c-e5c4-4032-8646-732b64f81d6d/project/c56afee6-74d8-4dd6-bb78-e4c2aa1ce875)
+
 
 ## Course Objectives
 
